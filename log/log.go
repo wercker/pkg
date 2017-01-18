@@ -34,14 +34,20 @@ var (
 	entry = &Entry{logrus.NewEntry(logrus.StandardLogger())}
 )
 
+// Fields type, used to pass to `WithFields`
 type Fields logrus.Fields
 
+// Formatter interface is used to implement a custom Formatter
 type Formatter logrus.Formatter
 
+// Level type
 type Level logrus.Level
 
+// Hook to be fired when logging on the logging levels returned from
+// `Levels()` on your implementation of the interface.
 type Hook logrus.Hook
 
+// Entry is the final or intermediate Logrus logging entry.
 type Entry struct {
 	*logrus.Entry
 }

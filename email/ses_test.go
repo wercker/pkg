@@ -14,7 +14,7 @@ import (
 func ExampleSESSender() {
 	// Create a SenderSESAPI compatible object, example:
 	// client := ses.New(sess, &aws.Config{Region: aws.String("us-east-1")})
-	var client SenderSESAPI = nil
+	var client SenderSESAPI
 	sender := NewSESSender(client)
 
 	msg := &Message{
