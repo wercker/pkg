@@ -55,6 +55,7 @@ func (m *Metadata) readString(path string) (string, error) {
 	if err != nil {
 		return "", err
 	}
+	defer f.Close()
 	b, err := ioutil.ReadAll(f)
 	if err != nil {
 		return "", err
