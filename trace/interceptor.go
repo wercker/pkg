@@ -1,11 +1,21 @@
 package trace
 
 import (
+	"github.com/grpc-ecosystem/grpc-opentracing/go/otgrpc"
+	grpcmw "github.com/mwitkow/go-grpc-middleware"
+	opentracing "github.com/opentracing/opentracing-go"
 	"github.com/wercker/pkg/log"
 	"golang.org/x/net/context"
-
 	"google.golang.org/grpc"
 )
+
+// Interceptor adds a opentracing middleware, and exposes the TraceID.
+func Interceptor(tracer opentracing.Tracer) grpc.UnaryServerInterceptor {
+	return grpcmw.ChainUnaryServer(
+		otgrpc.OpenTracingServerInterceptor(tracer), // opentracing (incoming)
+		ExposeInterceptor(),                         // expose traceID
+	)
+}
 
 // ExposeInterceptor extracts the TraceID from the context and adds it to
 // fields in the context.
