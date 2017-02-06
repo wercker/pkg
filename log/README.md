@@ -136,11 +136,12 @@ func main() {
 
 ## Fields
 
-### Field keys should follow camelCasing rules
+### Field keys should follow camel casing rules
 
-The keys of the fields should always follow the camel casing rules, and they
-should only contain letters and numbers. Words in names that are initialisms or
-acronyms (e.g. "URL" or "NATO") should have a consistent case though.
+The keys of the fields should always follow the lower camel casing rules, and
+they should only contain letters and numbers. Words in names that are
+initialisms or acronyms (e.g. "URL" or "NATO") should have a consistent case
+though.
 
 Never:
 
