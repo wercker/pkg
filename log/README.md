@@ -25,7 +25,7 @@ defined on the global logger, and any fields defined in the context.
 Best practice: always instantiate a `logger` as the first line of a context
 aware function, then use this `logger` throughout this function. Example:
 
-```
+```go
 func (s *SomeService) GetByID(ctx context.Context, id string) (*SomeStruct, error) {
   logger := log.FromContext(ctx)
   
@@ -45,14 +45,14 @@ filtering.
 
 Avoid:
 
-```
+```go
 logger := log.FromContext(ctx)
 logger.Infof("SomeService.GetByID was called; runID: %s, applicationID: %s, userID: %s.", rundID, applicationID, userID)
 ```
 
 Instead:
 
-```
+```go
 logger := log.FromContext(ctx)
 logger.WithFields(log.Fields{"runID": rundID, "applicationID": applicationID, "userID": userID}).Infof("SomeService.GetByID  was called")
 ```
@@ -65,13 +65,13 @@ colon, so it will look weird when it contains a capitalized first letter.
 
 Never:
 
-```
+```go
 return errors.New("Something failed")
 ```
 
 Instead:
 
-```
+```go
 return errors.New("something failed")
 ```
 
@@ -81,7 +81,7 @@ When checking for a error, try to wrap the error with `errors.Wrap` to add more
 context to the error before returning it. See
 https://godoc.org/github.com/pkg/errors
 
-```
+```go
 import "github.com/pkg/errors"
 
 func (s *SomeService) SomeFunc(ctx context.Context, args string) error {
@@ -108,7 +108,7 @@ log.WithError.
 
 Never:
 
-```
+```go
 func main() {
   err := someFunc()
   if err != nil {
@@ -122,7 +122,7 @@ func main() {
 
 Instead:
 
-```
+```go
 func main() {
   err := someFunc()
   if err != nil {
@@ -145,7 +145,7 @@ though.
 
 Never:
 
-```
+```go
 log.WithField("some_field", "")
 
 log.WithField("UserId", "")
@@ -153,7 +153,7 @@ log.WithField("UserId", "")
 
 Instead:
 
-```
+```go
 log.WithField("someField", "")
 
 log.WithField("userID", "")
@@ -166,7 +166,7 @@ follow the previous rule. Try to apply namespaced fields when there are
 multiple fields that have the same prefix, unless it diverges from consistent
 fields names in other services.
 
-```
+```go
 log.WithField("keen.projectID")
 ```
 
@@ -178,7 +178,7 @@ services. Use this for fields that are relevant for a request.
 
 Example (where `TraceMiddleware` will be called before `MongoStore`)
 
-```
+```go
 func (s *TraceMiddleware) Middleware(ctx context.Context) {
   ctx, logger := AddFieldToCtx("traceID", generateTraceID())
   // ...
@@ -198,7 +198,7 @@ NOTE(bvdberg): how do we keep track and decide which field keys to use?
 
 Avoid:
 
-```
+```go
 log.WithField("runIdentifier", "")
 
 log.WithField("run.id", "")
@@ -206,7 +206,7 @@ log.WithField("run.id", "")
 
 Better:
 
-```
+```go
 log.WithField("runID", "")
 ```
 
@@ -239,13 +239,13 @@ Convert a time.Time to the UTC timezone before adding it to a field.
 
 Never:
 
-```
+```go
 log.WithField("createdAt", time.Now().Format(time.RFC3339))
 ```
 
 Instead:
 
-```
+```go
 log.WithField("createdAt", time.Now().UTC().Format(time.RFC3339))
 ```
 
@@ -255,12 +255,13 @@ When logging a `time.Time` as a field, always format it to the RFC3339 format.
 
 Never:
 
-```
+```go
 log.WithField("createdAt", time.Now().UTC())
 ```
 
 Instead:
 
-```
+```go
 log.WithField("createdAt", time.Now().UTC().Format(time.RFC3339))
+
 ```
