@@ -75,9 +75,9 @@ Instead:
 return errors.New("something failed")
 ```
 
-### Use error.Wrap when returning errors
+### Use errors.Wrap when returning errors
 
-When checking for a error, try to wrap the error with `error.Wrap` to add more
+When checking for a error, try to wrap the error with `errors.Wrap` to add more
 context to the error before returning it.
 
 ```
