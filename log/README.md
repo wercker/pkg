@@ -78,7 +78,8 @@ return errors.New("something failed")
 ### Use errors.Wrap when returning errors
 
 When checking for a error, try to wrap the error with `errors.Wrap` to add more
-context to the error before returning it.
+context to the error before returning it. See
+https://godoc.org/github.com/pkg/errors
 
 ```
 import "github.com/pkg/errors"
