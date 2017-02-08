@@ -189,6 +189,18 @@
 			"revisionTime": "2016-08-03T19:07:31Z"
 		},
 		{
+			"checksumSHA1": "lzPj2yJz4Dy6ev0O0L4PNVzplAw=",
+			"path": "github.com/opentracing/opentracing-go",
+			"revision": "6edb48674bd9467b8e91fda004f2bd7202d60ce4",
+			"revisionTime": "2017-02-06T22:16:52Z"
+		},
+		{
+			"checksumSHA1": "1dfqsicLh/QE2TdZYb2moEijbmc=",
+			"path": "github.com/openzipkin/zipkin-go-opentracing",
+			"revision": "6022d4d3ed39632fad842942bda1813a9b4f63c8",
+			"revisionTime": "2017-02-03T12:00:57Z"
+		},
+		{
 			"checksumSHA1": "ynJSWoF6v+3zMnh9R0QmmG6iGV8=",
 			"path": "github.com/pkg/errors",
 			"revision": "248dadf4e9068a0b3e79f02ed0a610d935de5302",
