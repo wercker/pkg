@@ -3,6 +3,8 @@ package trace
 import (
 	"net/http"
 
+	othttp "github.com/opentracing-contrib/go-stdlib/nethttp"
+	opentracing "github.com/opentracing/opentracing-go"
 	"github.com/wercker/pkg/log"
 )
 
@@ -14,28 +16,29 @@ const (
 	TraceFieldKey = "traceID"
 )
 
+// HTTPMiddleware adds a opentracing middleware, and exposes the TraceID.
+func HTTPMiddleware(handler http.Handler, tracer opentracing.Tracer) http.Handler {
+	return http.HandlerFunc(func(res http.ResponseWriter, req *http.Request) {
+		handler = ExposeHandler(handler)             // expose traceID
+		handler = othttp.Middleware(tracer, handler) // opentracing (incoming)
+		handler.ServeHTTP(res, req)
+	})
+}
+
 // ExposeHandler decorates another http.Handler. It will check the context
 // defined on the incoming http.Request for a traceID. If it is found it will
 // add this to the response header and to the fields in the context.
 func ExposeHandler(h http.Handler) http.Handler {
-	return &traceExposer{h}
+	return http.HandlerFunc(func(res http.ResponseWriter, req *http.Request) {
+		ctx := req.Context()
+
+		traceID := ExtractTraceID(ctx)
+		if traceID != "" {
+			res.Header().Set(TraceHTTPHeader, traceID)
+			ctx, _ = log.AddFieldToCtx(ctx, TraceFieldKey, traceID)
+			req = req.WithContext(ctx)
+		}
+
+		h.ServeHTTP(res, req)
+	})
 }
-
-type traceExposer struct {
-	h http.Handler
-}
-
-func (e *traceExposer) ServeHTTP(res http.ResponseWriter, req *http.Request) {
-	ctx := req.Context()
-
-	traceID := ExtractTraceID(ctx)
-	if traceID != "" {
-		res.Header().Set(TraceHTTPHeader, traceID)
-		ctx, _ = log.AddFieldToCtx(ctx, TraceFieldKey, traceID)
-		req = req.WithContext(ctx)
-	}
-
-	e.h.ServeHTTP(res, req)
-}
-
-var _ http.Handler = (*traceExposer)(nil)
