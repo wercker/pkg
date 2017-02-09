@@ -19,7 +19,7 @@ func Test_FromContext_NoFields(t *testing.T) {
 
 func Test_FromContext_Fields(t *testing.T) {
 	ctx := context.Background()
-	ctx = fieldsNewContext(ctx, Fields{"SomeKey": "SomeValue"})
+	ctx = ContextWithFields(ctx, Fields{"SomeKey": "SomeValue"})
 
 	logger := FromContext(ctx)
 
