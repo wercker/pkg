@@ -8,19 +8,16 @@ import (
 )
 
 // New create a new HealthService
-func New() *HealthService {
-	probes := make(map[string]Probe)
-	return &HealthService{
-		probes: probes,
+func New() *Service {
+	return &Service{
+		probes: make(map[string]Probe),
 	}
 }
 
-// HealthService periodiablly checks all probes, if any fails it will keep
+// The Service periodiablly checks all probes, if any fails it will keep
 // track of this. It exposes this information through two handlers,
 // livenesProbe and readinessProbe.
-//
-//
-type HealthService struct {
+type Service struct {
 	mu     sync.Mutex
 	probes map[string]Probe
 
@@ -30,7 +27,7 @@ type HealthService struct {
 
 // ListenAndServe starts looping through the probes and it will start the
 // http server on addr.
-func (s *HealthService) ListenAndServe(addr string) error {
+func (s *Service) ListenAndServe(addr string) error {
 	go s.healthcheck()
 
 	m := http.NewServeMux()
@@ -43,7 +40,7 @@ func (s *HealthService) ListenAndServe(addr string) error {
 
 // healthcheck starts an infinite loop which will iterate over all probes to
 // see if there are unhealthy probes.
-func (s *HealthService) healthcheck() {
+func (s *Service) healthcheck() {
 	// TODO(bvdberg): Support stopping this infinite loop
 	for {
 		healthy := true
@@ -62,10 +59,10 @@ func (s *HealthService) healthcheck() {
 		sleepDuration := time.Second * 5
 
 		if healthy {
-			s.healthyCount += 1
+			s.healthyCount++
 			s.unhealthyCount = 0
 		} else {
-			s.unhealthyCount += 1
+			s.unhealthyCount++
 			s.healthyCount = 0
 			sleepDuration = time.Second * 2
 		}
@@ -78,7 +75,7 @@ func (s *HealthService) healthcheck() {
 
 // livenessProbe reports bad health when a probe failed 5 times. It should be
 // used to terminate this service.
-func (s *HealthService) livenessProbe(res http.ResponseWriter, req *http.Request) {
+func (s *Service) livenessProbe(res http.ResponseWriter, req *http.Request) {
 	if s.unhealthyCount > 5 {
 		http.Error(res, "500 bad health", http.StatusInternalServerError)
 		return
@@ -87,7 +84,7 @@ func (s *HealthService) livenessProbe(res http.ResponseWriter, req *http.Request
 
 // readynessProbe reports bad health when a probe failed 1 time. It should be
 // used to temporary prevent traffic from coming to this service.
-func (s *HealthService) readinessProbe(res http.ResponseWriter, req *http.Request) {
+func (s *Service) readinessProbe(res http.ResponseWriter, req *http.Request) {
 	if s.unhealthyCount > 0 {
 		http.Error(res, "500 bad health", http.StatusInternalServerError)
 		return
@@ -95,7 +92,7 @@ func (s *HealthService) readinessProbe(res http.ResponseWriter, req *http.Reques
 }
 
 // RegisterProbe adds a new probe to be monitored.
-func (s *HealthService) RegisterProbe(name string, p Probe) {
+func (s *Service) RegisterProbe(name string, p Probe) {
 	s.mu.Lock()
 
 	s.probes[name] = p

@@ -2,9 +2,9 @@
 
 Package health provides a simple health monitoring server.
 
-## HealthService
+## Health Service
 
-To create a health service simply create a new HealthService using New,
+To create a health service simply create a new health.Service using New,
 register any probes using the RegisterProbe function and finally calling
 ListenAndServe in a separate go routine:
 
