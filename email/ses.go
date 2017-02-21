@@ -1,10 +1,7 @@
 package email
 
 import (
-	"bytes"
 	"context"
-	htmltemplate "html/template"
-	texttemplate "text/template"
 
 	"github.com/aws/aws-sdk-go/aws"
 	"github.com/aws/aws-sdk-go/service/ses"
@@ -93,36 +90,24 @@ func convertToSendEmailInput(m *Message) *ses.SendEmailInput {
 			if m.HTMLBody != "" || m.TextBody != "" {
 				result.Message.Body = &ses.Body{}
 				if m.HTMLBody != "" {
-					hbody, err := htmltemplate.New("body").Parse(m.HTMLBody)
+					hbody, err := m.HTML()
 					if err != nil {
 						return result
 					}
-					var hbuf bytes.Buffer
-					err = hbody.Execute(hbuf, m.Data)
-					if err != nil {
-						return result
-					}
-
 					result.Message.Body.Html = &ses.Content{
 						Charset: aws.String("UTF-8"),
-						Data:    aws.String(hbuf.String()),
+						Data:    aws.String(hbody),
 					}
 				}
 
 				if m.TextBody != "" {
-					tbody, err := texttemplate.New("body").Parse(m.TextBody)
+					tbody, err := m.Text()
 					if err != nil {
 						return result
 					}
-					var tbuf bytes.Buffer
-					err = tbody.Execute(tbuf, m.Data)
-					if err != nil {
-						return result
-					}
-
 					result.Message.Body.Text = &ses.Content{
 						Charset: aws.String("UTF-8"),
-						Data:    aws.String(tbuf.String()),
+						Data:    aws.String(tbody),
 					}
 				}
 			}
