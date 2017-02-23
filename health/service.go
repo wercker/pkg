@@ -1,6 +1,7 @@
 package health
 
 import (
+	"context"
 	"log"
 	"net/http"
 	"sync"
@@ -21,6 +22,8 @@ type Service struct {
 	mu     sync.Mutex
 	probes map[string]Probe
 
+	server *http.Server
+
 	healthyCount   int
 	unhealthyCount int
 }
@@ -35,7 +38,25 @@ func (s *Service) ListenAndServe(addr string) error {
 	m.HandleFunc("/live", s.livenessProbe)
 	m.HandleFunc("/ready", s.readinessProbe)
 
-	return http.ListenAndServe(addr, m)
+	s.server = &http.Server{
+		Addr:    addr,
+		Handler: m,
+	}
+	return s.server.ListenAndServe()
+}
+
+// Shutdown gracefully shuts down the server without interrupting any
+// active connections. Shutdown works by first closing all open
+// listeners, then closing all idle connections, and then waiting
+// indefinitely for connections to return to idle and then shut down.
+// If the provided context expires before the shutdown is complete,
+// then the context's error is returned.
+// This operation is a no-op if no server has been started.
+func (s *Service) Shutdown(ctx context.Context) error {
+	if s.server != nil {
+		return nil
+	}
+	return s.server.Shutdown(ctx)
 }
 
 // healthcheck starts an infinite loop which will iterate over all probes to
