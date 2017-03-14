@@ -18,11 +18,8 @@ const (
 
 // HTTPMiddleware adds a opentracing middleware, and exposes the TraceID.
 func HTTPMiddleware(handler http.Handler, tracer opentracing.Tracer) http.Handler {
-	return http.HandlerFunc(func(res http.ResponseWriter, req *http.Request) {
-		handler = ExposeHandler(handler)             // expose traceID
-		handler = othttp.Middleware(tracer, handler) // opentracing (incoming)
-		handler.ServeHTTP(res, req)
-	})
+	handler = ExposeHandler(handler)          // expose traceID
+	return othttp.Middleware(tracer, handler) // opentracing (incoming)
 }
 
 // ExposeHandler decorates another http.Handler. It will check the context
