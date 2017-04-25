@@ -35,14 +35,14 @@ func (m *Metadata) LoadAll() {
 func (m *Metadata) Fields() log.Fields {
 	fields := log.Fields{}
 	for k, v := range m.labels {
-		fields[fmt.Sprintf("kubernetes.labels.%s", k)] = v
+		fields[fmt.Sprintf("kubernetes_labels_%s", k)] = v
 	}
 	if m.name != "" {
-		fields["kubernetes.pod_name"] = m.name
+		fields["kubernetes_pod_name"] = m.name
 	}
 
 	if m.namespace != "" {
-		fields["kubernetes.namespace_name"] = m.namespace
+		fields["kubernetes_namespace_name"] = m.namespace
 	}
 	return fields
 }
