@@ -16,7 +16,7 @@ func (code statusCodeHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) 
 }
 
 func Test_NoCacheHandler(t *testing.T) {
-	h := NewNoCache(statusCodeHandler(http.StatusTeapot))
+	h := NewNoCacheHandler(statusCodeHandler(http.StatusTeapot))
 
 	req := httptest.NewRequest("GET", "http://example.com/foo", nil)
 	w := httptest.NewRecorder()
