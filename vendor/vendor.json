@@ -9,10 +9,10 @@
 			"revisionTime": "2017-02-07T20:14:37Z"
 		},
 		{
-			"checksumSHA1": "yXrS4e4yxaRBu/MX+39X3cS4kbg=",
+			"checksumSHA1": "9X1/hLR+WoHu3Vg6SDKF6W6Rjm4=",
 			"path": "github.com/Sirupsen/logrus",
-			"revision": "a283a10442df8dc09befd873fab202bf8a253d6a",
-			"revisionTime": "2016-07-16T02:56:31Z"
+			"revision": "7dd06bf38e1e13df288d471a57d5adbac106be9e",
+			"revisionTime": "2017-06-30T00:54:20Z"
 		},
 		{
 			"checksumSHA1": "g+1RRk1Ar1T0GhrymGM/YDGU76U=",
@@ -423,10 +423,10 @@
 			"revisionTime": "2016-11-15T18:38:51Z"
 		},
 		{
-			"checksumSHA1": "8fD/im5Kwvy3JgmxulDTambmE8w=",
+			"checksumSHA1": "tS9B7JRfbkBNQHl0i0AGj+r1ruk=",
 			"path": "golang.org/x/sys/unix",
-			"revision": "a646d33e2ee3172a661fc09bca23bb4889a41bc8",
-			"revisionTime": "2016-07-15T05:43:45Z"
+			"revision": "90796e5a05ce440b41c768bd9af257005e470461",
+			"revisionTime": "2017-06-27T07:55:33Z"
 		},
 		{
 			"checksumSHA1": "xyB2Py2ViSKX8Td+oe2hxG6f0Ak=",
