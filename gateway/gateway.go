@@ -4,10 +4,10 @@ import (
 	"fmt"
 	"net/http"
 
-	log "github.com/Sirupsen/logrus"
 	"github.com/grpc-ecosystem/grpc-gateway/runtime"
 	"github.com/wercker/auth/middleware"
 	"github.com/wercker/pkg/config"
+	"github.com/wercker/pkg/log"
 	"golang.org/x/net/context"
 	"google.golang.org/grpc"
 	cli "gopkg.in/urfave/cli.v1"
@@ -71,7 +71,7 @@ func Action(cfg *config.Config, reg func(context.Context, *runtime.ServeMux, str
 
 		authMiddleware := middleware.AuthTokenMiddleware(mux)
 
-		log.Printf("Listening on port %d", o.Port)
+		log.Infof("Listening on port %d", o.Port)
 		http.ListenAndServe(fmt.Sprintf(":%d", o.Port), authMiddleware)
 
 		return nil

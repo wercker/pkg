@@ -1,237 +1,334 @@
 package log
 
 import (
+	"fmt"
 	"io"
+	"io/ioutil"
+	"log"
+	"net/url"
+	"os"
+	"runtime"
+	"strings"
 
-	"github.com/Sirupsen/logrus"
+	"github.com/sirupsen/logrus"
 )
 
-// Basically doing what this suggests: http://stackoverflow.com/questions/30257622/golang-logrus-how-to-do-a-centralized-configuration
-
-// These are the different logging levels. You can set the logging level to log
-// on your instance of logger, obtained with `logrus.New()`.
-const (
-	// PanicLevel level, highest level of severity. Logs and then calls panic with the
-	// message passed to Debug, Info, ...
-	PanicLevel Level = iota
-	// FatalLevel level. Logs and then calls `os.Exit(1)`. It will exit even if the
-	// logging level is set to Panic.
-	FatalLevel
-	// ErrorLevel level. Logs. Used for errors that should definitely be noted.
-	// Commonly used for hooks to send errors to an error tracking service.
-	ErrorLevel
-	// WarnLevel level. Non-critical entries that deserve eyes.
-	WarnLevel
-	// InfoLevel level. General operational entries about what's going on inside the
-	// application.
-	InfoLevel
-	// DebugLevel level. Usually only enabled when debugging. Very verbose logging.
-	DebugLevel
-)
-
-var (
-	// std is the name of the standard logger in stdlib `log`
-	entry = &Entry{logrus.NewEntry(logrus.StandardLogger())}
-)
-
-// Fields type, used to pass to `WithFields`
+// Fields type, used to pass to `WithFields`.
 type Fields logrus.Fields
 
-// Formatter interface is used to implement a custom Formatter
-type Formatter logrus.Formatter
-
-// Level type
-type Level logrus.Level
-
-// Hook to be fired when logging on the logging levels returned from
-// `Levels()` on your implementation of the interface.
-type Hook logrus.Hook
-
-// Entry is the final or intermediate Logrus logging entry.
-type Entry struct {
-	*logrus.Entry
+func setJSONFormatter() {
+	origLogger.Formatter = &logrus.JSONFormatter{}
 }
 
-// WithField wraps logrus
-func (e *Entry) WithField(key string, value interface{}) *Entry {
-	return &Entry{e.Entry.WithField(key, value)}
+// Logger is the interface for logger(s) used in Weekly Reading.
+type Logger interface {
+	Debug(...interface{})
+	Debugln(...interface{})
+	Debugf(string, ...interface{})
+
+	Info(...interface{})
+	Infoln(...interface{})
+	Infof(string, ...interface{})
+
+	Warn(...interface{})
+	Warnln(...interface{})
+	Warnf(string, ...interface{})
+
+	Error(...interface{})
+	Errorln(...interface{})
+	Errorf(string, ...interface{})
+
+	Fatal(...interface{})
+	Fatalln(...interface{})
+	Fatalf(string, ...interface{})
+
+	With(key string, value interface{}) Logger
+	WithField(key string, value interface{}) Logger
+	WithFields(fields Fields) Logger
+	WithError(err error) Logger
+
+	Fields() Fields
+
+	SetFormat(string) error
+	SetLevel(string) error
 }
 
-// WithFields wraps logrus
-func (e *Entry) WithFields(fields Fields) *Entry {
-	return &Entry{e.Entry.WithFields(logrus.Fields(fields))}
+type logger struct {
+	entry *logrus.Entry
 }
 
-// AddFields adds some fields globally to the standard entry
-func AddFields(fields Fields) {
-	entry = entry.WithFields(fields)
+func (l logger) With(key string, value interface{}) Logger {
+	return logger{l.entry.WithField(key, value)}
 }
 
-// SetOutput sets the standard logger output.
-func SetOutput(out io.Writer) {
-	logrus.SetOutput(out)
+// Deprecated: Use With instead.
+func (l logger) WithField(key string, value interface{}) Logger {
+	return l.With(key, value)
 }
 
-// SetFormatter sets the standard logger formatter.
-func SetFormatter(formatter Formatter) {
-	logrus.SetFormatter(logrus.Formatter(formatter))
+func (l logger) WithFields(fields Fields) Logger {
+	return logger{l.entry.WithFields(logrus.Fields(fields))}
 }
 
-// SetLevel sets the standard logger level.
-func SetLevel(level Level) {
-	logrus.SetLevel(logrus.Level(level))
+func (l logger) WithError(err error) Logger {
+	return logger{l.entry.WithError(err)}
 }
 
-// GetLevel returns the standard logger level.
-func GetLevel() Level {
-	return Level(logrus.GetLevel())
+func (l logger) Fields() Fields {
+	return Fields(l.entry.Data)
 }
 
-// AddHook adds a hook to the standard logger hooks.
-func AddHook(hook Hook) {
-	logrus.AddHook(logrus.Hook(hook))
+// Debug logs a message at level Debug on the standard logger.
+func (l logger) Debug(args ...interface{}) {
+	l.sourced().Debug(args...)
 }
 
-// WithError creates an entry from the standard entry and adds an error to it, using the value defined in ErrorKey as key.
-func WithError(err error) *Entry {
-	return entry.WithField(logrus.ErrorKey, err)
+// Debug logs a message at level Debug on the standard logger.
+func (l logger) Debugln(args ...interface{}) {
+	l.sourced().Debugln(args...)
 }
 
-// WithField creates an entry from the standard entry and adds a field to
-// it. If you want multiple fields, use `WithFields`.
+// Debugf logs a message at level Debug on the standard logger.
+func (l logger) Debugf(format string, args ...interface{}) {
+	l.sourced().Debugf(format, args...)
+}
+
+// Info logs a message at level Info on the standard logger.
+func (l logger) Info(args ...interface{}) {
+	l.sourced().Info(args...)
+}
+
+// Info logs a message at level Info on the standard logger.
+func (l logger) Infoln(args ...interface{}) {
+	l.sourced().Infoln(args...)
+}
+
+// Infof logs a message at level Info on the standard logger.
+func (l logger) Infof(format string, args ...interface{}) {
+	l.sourced().Infof(format, args...)
+}
+
+// Warn logs a message at level Warn on the standard logger.
+func (l logger) Warn(args ...interface{}) {
+	l.sourced().Warn(args...)
+}
+
+// Warn logs a message at level Warn on the standard logger.
+func (l logger) Warnln(args ...interface{}) {
+	l.sourced().Warnln(args...)
+}
+
+// Warnf logs a message at level Warn on the standard logger.
+func (l logger) Warnf(format string, args ...interface{}) {
+	l.sourced().Warnf(format, args...)
+}
+
+// Error logs a message at level Error on the standard logger.
+func (l logger) Error(args ...interface{}) {
+	l.sourced().Error(args...)
+}
+
+// Error logs a message at level Error on the standard logger.
+func (l logger) Errorln(args ...interface{}) {
+	l.sourced().Errorln(args...)
+}
+
+// Errorf logs a message at level Error on the standard logger.
+func (l logger) Errorf(format string, args ...interface{}) {
+	l.sourced().Errorf(format, args...)
+}
+
+// Fatal logs a message at level Fatal on the standard logger.
+func (l logger) Fatal(args ...interface{}) {
+	l.sourced().Fatal(args...)
+}
+
+// Fatal logs a message at level Fatal on the standard logger.
+func (l logger) Fatalln(args ...interface{}) {
+	l.sourced().Fatalln(args...)
+}
+
+// Fatalf logs a message at level Fatal on the standard logger.
+func (l logger) Fatalf(format string, args ...interface{}) {
+	l.sourced().Fatalf(format, args...)
+}
+
+func (l logger) SetLevel(level string) error {
+	lvl, err := logrus.ParseLevel(level)
+	if err != nil {
+		return err
+	}
+
+	l.entry.Logger.Level = lvl
+	return nil
+}
+
+func (l logger) SetFormat(format string) error {
+	u, err := url.Parse(format)
+	if err != nil {
+		return err
+	}
+	if u.Scheme != "logger" {
+		return fmt.Errorf("invalid scheme %s", u.Scheme)
+	}
+	jsonq := u.Query().Get("json")
+	if jsonq == "true" {
+		setJSONFormatter()
+	}
+
+	switch u.Opaque {
+	case "stdout":
+		l.entry.Logger.Out = os.Stdout
+	case "stderr":
+		l.entry.Logger.Out = os.Stderr
+	default:
+		return fmt.Errorf("unsupported logger %q", u.Opaque)
+	}
+	return nil
+}
+
+// sourced adds a source field to the logger that contains
+// the file name and line where the logging happened.
+func (l logger) sourced() *logrus.Entry {
+	_, file, line, ok := runtime.Caller(2)
+	if !ok {
+		file = "<???>"
+		line = 1
+	} else {
+		slash := strings.LastIndex(file, "/")
+		file = file[slash+1:]
+	}
+	return l.entry.WithField("source", fmt.Sprintf("%s:%d", file, line))
+}
+
+var origLogger = logrus.New()
+var baseLogger = logger{entry: logrus.NewEntry(origLogger)}
+
+// Base returns the default Logger logging to
+func Base() Logger {
+	return baseLogger
+}
+
+// NewLogger returns a new Logger logging to out.
+func NewLogger(w io.Writer) Logger {
+	l := logrus.New()
+	l.Out = w
+	return logger{entry: logrus.NewEntry(l)}
+}
+
+// NewNopLogger returns a logger that discards all log messages.
+func NewNopLogger() Logger {
+	l := logrus.New()
+	l.Out = ioutil.Discard
+	return logger{entry: logrus.NewEntry(l)}
+}
+
+// With adds a field to the logger.
+func With(key string, value interface{}) Logger {
+	return baseLogger.With(key, value)
+}
+
+// WithField adds a field to the logger.
 //
-// Note that it doesn't log until you call Debug, Print, Info, Warn, Fatal
-// or Panic on the Entry it returns.
-func WithField(key string, value interface{}) *Entry {
-	return entry.WithField(key, value)
+// Deprecated: Use With instead.
+func WithField(key string, value interface{}) Logger {
+	return With(key, value)
 }
 
-// WithFields creates an entry from the standard entry and adds multiple
-// fields to it. This is simply a helper for `WithField`, invoking it
-// once for each field.
-//
-// Note that it doesn't log until you call Debug, Print, Info, Warn, Fatal
-// or Panic on the Entry it returns.
-func WithFields(fields Fields) *Entry {
-	return entry.WithFields(fields)
+// WithFields adds multiple fields to the logger.
+func WithFields(fields Fields) Logger {
+	return baseLogger.WithFields(fields)
 }
 
-// Debug logs a message at level Debug on the standard entry.
+// WithError adds an error to the logger.
+func WithError(err error) Logger {
+	return baseLogger.WithError(err)
+}
+
+// Debug logs a message at level Debug on the standard logger.
 func Debug(args ...interface{}) {
-	entry.Debug(args...)
+	baseLogger.sourced().Debug(args...)
 }
 
-// Print logs a message at level Info on the standard entry.
-func Print(args ...interface{}) {
-	entry.Print(args...)
-}
-
-// Info logs a message at level Info on the standard entry.
-func Info(args ...interface{}) {
-	entry.Info(args...)
-}
-
-// Warn logs a message at level Warn on the standard entry.
-func Warn(args ...interface{}) {
-	entry.Warn(args...)
-}
-
-// Warning logs a message at level Warn on the standard entry.
-func Warning(args ...interface{}) {
-	entry.Warning(args...)
-}
-
-// Error logs a message at level Error on the standard entry.
-func Error(args ...interface{}) {
-	entry.Error(args...)
-}
-
-// Panic logs a message at level Panic on the standard entry.
-func Panic(args ...interface{}) {
-	entry.Panic(args...)
-}
-
-// Fatal logs a message at level Fatal on the standard entry.
-func Fatal(args ...interface{}) {
-	entry.Fatal(args...)
-}
-
-// Debugf logs a message at level Debug on the standard entry.
-func Debugf(format string, args ...interface{}) {
-	entry.Debugf(format, args...)
-}
-
-// Printf logs a message at level Info on the standard entry.
-func Printf(format string, args ...interface{}) {
-	entry.Printf(format, args...)
-}
-
-// Infof logs a message at level Info on the standard entry.
-func Infof(format string, args ...interface{}) {
-	entry.Infof(format, args...)
-}
-
-// Warnf logs a message at level Warn on the standard entry.
-func Warnf(format string, args ...interface{}) {
-	entry.Warnf(format, args...)
-}
-
-// Warningf logs a message at level Warn on the standard entry.
-func Warningf(format string, args ...interface{}) {
-	entry.Warningf(format, args...)
-}
-
-// Errorf logs a message at level Error on the standard entry.
-func Errorf(format string, args ...interface{}) {
-	entry.Errorf(format, args...)
-}
-
-// Panicf logs a message at level Panic on the standard entry.
-func Panicf(format string, args ...interface{}) {
-	entry.Panicf(format, args...)
-}
-
-// Fatalf logs a message at level Fatal on the standard entry.
-func Fatalf(format string, args ...interface{}) {
-	entry.Fatalf(format, args...)
-}
-
-// Debugln logs a message at level Debug on the standard entry.
+// Debugln logs a message at level Debug on the standard logger.
 func Debugln(args ...interface{}) {
-	entry.Debugln(args...)
+	baseLogger.sourced().Debugln(args...)
 }
 
-// Println logs a message at level Info on the standard entry.
-func Println(args ...interface{}) {
-	entry.Println(args...)
+// Debugf logs a message at level Debug on the standard logger.
+func Debugf(format string, args ...interface{}) {
+	baseLogger.sourced().Debugf(format, args...)
 }
 
-// Infoln logs a message at level Info on the standard entry.
+// Info logs a message at level Info on the standard logger.
+func Info(args ...interface{}) {
+	baseLogger.sourced().Info(args...)
+}
+
+// Infoln logs a message at level Info on the standard logger.
 func Infoln(args ...interface{}) {
-	entry.Infoln(args...)
+	baseLogger.sourced().Infoln(args...)
 }
 
-// Warnln logs a message at level Warn on the standard entry.
+// Infof logs a message at level Info on the standard logger.
+func Infof(format string, args ...interface{}) {
+	baseLogger.sourced().Infof(format, args...)
+}
+
+// Warn logs a message at level Warn on the standard logger.
+func Warn(args ...interface{}) {
+	baseLogger.sourced().Warn(args...)
+}
+
+// Warnln logs a message at level Warn on the standard logger.
 func Warnln(args ...interface{}) {
-	entry.Warnln(args...)
+	baseLogger.sourced().Warnln(args...)
 }
 
-// Warningln logs a message at level Warn on the standard entry.
-func Warningln(args ...interface{}) {
-	entry.Warningln(args...)
+// Warnf logs a message at level Warn on the standard logger.
+func Warnf(format string, args ...interface{}) {
+	baseLogger.sourced().Warnf(format, args...)
 }
 
-// Errorln logs a message at level Error on the standard entry.
+// Error logs a message at level Error on the standard logger.
+func Error(args ...interface{}) {
+	baseLogger.sourced().Error(args...)
+}
+
+// Errorln logs a message at level Error on the standard logger.
 func Errorln(args ...interface{}) {
-	entry.Errorln(args...)
+	baseLogger.sourced().Errorln(args...)
 }
 
-// Panicln logs a message at level Panic on the standard entry.
-func Panicln(args ...interface{}) {
-	entry.Panicln(args...)
+// Errorf logs a message at level Error on the standard logger.
+func Errorf(format string, args ...interface{}) {
+	baseLogger.sourced().Errorf(format, args...)
 }
 
-// Fatalln logs a message at level Fatal on the standard entry.
+// Fatal logs a message at level Fatal on the standard logger.
+func Fatal(args ...interface{}) {
+	baseLogger.sourced().Fatal(args...)
+}
+
+// Fatalln logs a message at level Fatal on the standard logger.
 func Fatalln(args ...interface{}) {
-	entry.Fatalln(args...)
+	baseLogger.sourced().Fatalln(args...)
+}
+
+// Fatalf logs a message at level Fatal on the standard logger.
+func Fatalf(format string, args ...interface{}) {
+	baseLogger.sourced().Fatalf(format, args...)
+}
+
+type errorLogWriter struct{}
+
+func (errorLogWriter) Write(b []byte) (int, error) {
+	baseLogger.sourced().Error(string(b))
+	return len(b), nil
+}
+
+// NewErrorLogger returns a log.Logger that is meant to be used
+// in the ErrorLog field of an http.Server to log HTTP server errors.
+func NewErrorLogger() *log.Logger {
+	return log.New(&errorLogWriter{}, "", 0)
 }
