@@ -1,16 +1,25 @@
 package reflectutil
 
-import "reflect"
+import (
+	"reflect"
+)
 
 // GetMethods uses the reflect package to get the method names on defined on
 // in.
 func GetMethods(in interface{}) []string {
-	value := reflect.TypeOf(in)
+	if in == nil {
+		return []string{}
+	}
 
-	numMethods := value.NumMethod()
+	t := reflect.TypeOf(in)
+	if t.Kind() != reflect.Ptr {
+		t = reflect.PtrTo(t)
+	}
+
+	numMethods := t.NumMethod()
 	methods := make([]string, numMethods)
 	for i := 0; i < numMethods; i++ {
-		methods[i] = value.Method(i).Name
+		methods[i] = t.Method(i).Name
 	}
 
 	return methods
