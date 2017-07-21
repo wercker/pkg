@@ -7,10 +7,12 @@ import (
 	"github.com/wercker/pkg/reflectutil"
 )
 
+// labels are the labels that are send to prometheus
 var labels = []string{
 	"method",
 }
 
+// NewStoreObserver creates a new StoreObserver
 func NewStoreObserver() *StoreObserver {
 	durationOpts := prometheus.HistogramOpts{
 		Name: "store_handling_seconds",
@@ -30,6 +32,7 @@ func NewStoreObserver() *StoreObserver {
 	return &StoreObserver{duration: duration, counter: counter}
 }
 
+// StoreObserver encapsulates exposing of store specific metrics to Prometheus.
 type StoreObserver struct {
 	duration *prometheus.HistogramVec
 	counter  *prometheus.CounterVec
