@@ -38,12 +38,21 @@ type StoreObserver struct {
 	counter  *prometheus.CounterVec
 }
 
-// Preload counters and histograms for each method defined on s.
-func (m *StoreObserver) Preload(s interface{}) {
+// defaultIgnoredMethods are methods which are commonly found on our stores and
+// thus ignored when preloading.
+var defaultIgnoredMethods = []string{"Close", "Healthy", "C"}
+
+// Preload counters and histograms for each method defined on s. You can
+// optionally supply extra ignoreMethods which will be added to the
+// defaultIgnoredMethods array.
+func (m *StoreObserver) Preload(s interface{}, extraIgnoredMethods ...string) {
+	ignoredMethods := append(defaultIgnoredMethods, extraIgnoredMethods...)
 	methods := reflectutil.GetMethods(s)
 	for _, method := range methods {
-		if method == "Close" || method == "Healthy" {
-			continue
+		for _, ignore := range ignoredMethods {
+			if method == ignore {
+				continue
+			}
 		}
 		m.counter.WithLabelValues(method)
 		m.duration.WithLabelValues(method)
