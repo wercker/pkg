@@ -3,6 +3,8 @@ package log
 import (
 	"os"
 
+	"golang.org/x/crypto/ssh/terminal"
+
 	"github.com/Sirupsen/logrus"
 	cli "gopkg.in/urfave/cli.v1"
 )
@@ -14,8 +16,19 @@ func SetupLogging(c *cli.Context) error {
 
 	// Dynamically return false or true based on the logger output's
 	// file descriptor referring to a terminal or not.
-	if os.Getenv("TERM") == "dumb" || !logrus.IsTerminal(logrus.StandardLogger().Out) {
+	if os.Getenv("TERM") == "dumb" || !isLogrusTerminal() {
 		SetFormatter(&logrus.JSONFormatter{})
 	}
 	return nil
+}
+
+// isLogrusTerminal checks if the standard logger of Logrus is a terminal.
+func isLogrusTerminal() bool {
+	w := logrus.StandardLogger().Out
+	switch v := w.(type) {
+	case *os.File:
+		return terminal.IsTerminal(int(v.Fd()))
+	default:
+		return false
+	}
 }
