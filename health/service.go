@@ -2,10 +2,11 @@ package health
 
 import (
 	"context"
-	"log"
 	"net/http"
 	"sync"
 	"time"
+
+	"github.com/wercker/pkg/log"
 )
 
 // New create a new HealthService
@@ -73,7 +74,7 @@ func (s *Service) healthcheck() {
 			err := probe.Healthy()
 			if err != nil {
 				healthy = false
-				log.Printf("Probe %s failed its healthcheck: %+v", name, err)
+				log.Warn("Probe %s failed its healthcheck: %+v", name, err)
 			}
 		}
 
