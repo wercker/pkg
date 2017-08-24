@@ -7,8 +7,32 @@ import (
 )
 
 // CodeFromHTTPErrorStatus given an http status code 4xx or 5xx returns a gRPC code
-func CodeFromHTTPErrorStatus(httpErrorStatus int) codes.Code {
-	switch httpErrorStatus {
+func CodeFromHTTPStatus(httpStatus int) codes.Code {
+	switch httpStatus {
+
+	// 1xx, 2xx, and 3xx map all to codes.OK
+	case http.StatusContinue:
+	case http.StatusSwitchingProtocols:
+	case http.StatusProcessing:
+	case http.StatusOK:
+	case http.StatusCreated:
+	case http.StatusAccepted:
+	case http.StatusNonAuthoritativeInfo:
+	case http.StatusNoContent:
+	case http.StatusResetContent:
+	case http.StatusPartialContent:
+	case http.StatusMultiStatus:
+	case http.StatusAlreadyReported:
+	case http.StatusIMUsed:
+	case http.StatusMultipleChoices:
+	case http.StatusMovedPermanently:
+	case http.StatusFound:
+	case http.StatusSeeOther:
+	case http.StatusNotModified:
+	case http.StatusUseProxy:
+	case http.StatusTemporaryRedirect:
+	case http.StatusPermanentRedirect:
+		return codes.OK
 
 	case http.StatusBadRequest:
 	case http.StatusMethodNotAllowed:
