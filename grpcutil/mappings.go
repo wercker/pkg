@@ -6,7 +6,7 @@ import (
 	"google.golang.org/grpc/codes"
 )
 
-// CodeFromHTTPErrorStatus given an http status code 4xx or 5xx returns a gRPC code
+// CodeFromHTTPStatus given an http status code 4xx or 5xx returns a gRPC code
 func CodeFromHTTPStatus(httpStatus int) codes.Code {
 	switch httpStatus {
 
