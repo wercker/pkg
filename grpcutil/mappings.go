@@ -1,4 +1,4 @@
-package mapping
+package grpcutil
 
 import (
 	"net/http"
@@ -6,9 +6,9 @@ import (
 	"google.golang.org/grpc/codes"
 )
 
-// HTTPStatusTogRPCCode given an http status code 4xx or 5xx returns a gRPC error code
-func HTTPStatusTogRPCCode(httpStatus int) codes.Code {
-	switch httpStatus {
+// CodeFromHTTPErrorStatus given an http status code 4xx or 5xx returns a gRPC code
+func CodeFromHTTPErrorStatus(httpErrorStatus int) codes.Code {
+	switch httpErrorStatus {
 
 	case http.StatusBadRequest:
 	case http.StatusMethodNotAllowed:
