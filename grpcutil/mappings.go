@@ -10,51 +10,55 @@ import (
 func CodeFromHTTPStatus(httpStatus int) codes.Code {
 	switch httpStatus {
 
-	// 1xx, 2xx, and 3xx map all to codes.OK
-	case http.StatusContinue:
-	case http.StatusSwitchingProtocols:
-	case http.StatusProcessing:
-	case http.StatusOK:
-	case http.StatusCreated:
-	case http.StatusAccepted:
-	case http.StatusNonAuthoritativeInfo:
-	case http.StatusNoContent:
-	case http.StatusResetContent:
-	case http.StatusPartialContent:
-	case http.StatusMultiStatus:
-	case http.StatusAlreadyReported:
-	case http.StatusIMUsed:
-	case http.StatusMultipleChoices:
-	case http.StatusMovedPermanently:
-	case http.StatusFound:
-	case http.StatusSeeOther:
-	case http.StatusNotModified:
-	case http.StatusUseProxy:
-	case http.StatusTemporaryRedirect:
-	case http.StatusPermanentRedirect:
+	// 1xx, 2xx, and 3xx all map to codes.OK
+	case
+		http.StatusContinue,
+		http.StatusSwitchingProtocols,
+		http.StatusProcessing,
+		http.StatusOK,
+		http.StatusCreated,
+		http.StatusAccepted,
+		http.StatusNonAuthoritativeInfo,
+		http.StatusNoContent,
+		http.StatusResetContent,
+		http.StatusPartialContent,
+		http.StatusMultiStatus,
+		http.StatusAlreadyReported,
+		http.StatusIMUsed,
+		http.StatusMultipleChoices,
+		http.StatusMovedPermanently,
+		http.StatusFound,
+		http.StatusSeeOther,
+		http.StatusNotModified,
+		http.StatusUseProxy,
+		http.StatusTemporaryRedirect,
+		http.StatusPermanentRedirect:
 		return codes.OK
 
-	case http.StatusBadRequest:
-	case http.StatusMethodNotAllowed:
-	case http.StatusNotAcceptable:
-	case http.StatusLengthRequired:
-	case http.StatusRequestEntityTooLarge:
-	case http.StatusRequestURITooLong:
-	case http.StatusRequestHeaderFieldsTooLarge:
-	case http.StatusUnsupportedMediaType:
-	case http.StatusRequestedRangeNotSatisfiable:
-	case http.StatusExpectationFailed:
+	case
+		http.StatusBadRequest,
+		http.StatusMethodNotAllowed,
+		http.StatusNotAcceptable,
+		http.StatusLengthRequired,
+		http.StatusRequestEntityTooLarge,
+		http.StatusRequestURITooLong,
+		http.StatusRequestHeaderFieldsTooLarge,
+		http.StatusUnsupportedMediaType,
+		http.StatusRequestedRangeNotSatisfiable,
+		http.StatusExpectationFailed:
 		return codes.InvalidArgument
 
 	case http.StatusRequestTimeout:
 		return codes.DeadlineExceeded
 
-	case http.StatusNotFound:
-	case http.StatusGone:
+	case
+		http.StatusNotFound,
+		http.StatusGone:
 		return codes.NotFound
 
 	case http.StatusConflict:
 		return codes.AlreadyExists
+
 	case http.StatusProxyAuthRequired:
 		return codes.Unauthenticated
 
@@ -70,16 +74,18 @@ func CodeFromHTTPStatus(httpStatus int) codes.Code {
 	case http.StatusNotImplemented:
 		return codes.Unimplemented
 
-	case http.StatusInternalServerError:
-	case http.StatusHTTPVersionNotSupported:
-	case http.StatusVariantAlsoNegotiates:
-	case http.StatusInsufficientStorage:
-	case http.StatusLoopDetected:
+	case
+		http.StatusInternalServerError,
+		http.StatusHTTPVersionNotSupported,
+		http.StatusVariantAlsoNegotiates,
+		http.StatusInsufficientStorage,
+		http.StatusLoopDetected:
 		return codes.Internal
 
-	case http.StatusBadGateway:
-	case http.StatusServiceUnavailable:
-	case http.StatusGatewayTimeout:
+	case
+		http.StatusBadGateway,
+		http.StatusServiceUnavailable,
+		http.StatusGatewayTimeout:
 		return codes.Unavailable
 
 	}
