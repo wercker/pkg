@@ -49,14 +49,23 @@ func (m *StoreObserver) Preload(s interface{}, extraIgnoredMethods ...string) {
 	ignoredMethods := append(defaultIgnoredMethods, extraIgnoredMethods...)
 	methods := reflectutil.GetMethods(s)
 	for _, method := range methods {
-		for _, ignore := range ignoredMethods {
-			if method == ignore {
-				continue
-			}
+		if shouldIgnore(method, ignoredMethods) {
+			continue
 		}
+
 		m.counter.WithLabelValues(method)
 		m.duration.WithLabelValues(method)
 	}
+}
+
+func shouldIgnore(method string, ignoredMethods []string) bool {
+	for _, ignore := range ignoredMethods {
+		if method == ignore {
+			return true
+		}
+	}
+
+	return false
 }
 
 // Observe immediately increments the counter for method and returns a func
