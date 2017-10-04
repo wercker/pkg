@@ -9,12 +9,6 @@
 			"revisionTime": "2017-02-07T20:14:37Z"
 		},
 		{
-			"checksumSHA1": "9X1/hLR+WoHu3Vg6SDKF6W6Rjm4=",
-			"path": "github.com/Sirupsen/logrus",
-			"revision": "7dd06bf38e1e13df288d471a57d5adbac106be9e",
-			"revisionTime": "2017-06-30T00:54:20Z"
-		},
-		{
 			"checksumSHA1": "g+1RRk1Ar1T0GhrymGM/YDGU76U=",
 			"path": "github.com/apache/thrift/lib/go/thrift",
 			"revision": "3a8bbbd4a68fb28f2b33a7ee9e81ba3dd4a929a5",
@@ -403,6 +397,12 @@
 			"path": "github.com/rcrowley/go-metrics",
 			"revision": "1f30fe9094a513ce4c700b9a54458bbb0c96996c",
 			"revisionTime": "2016-11-28T21:05:44Z"
+		},
+		{
+			"checksumSHA1": "BYvROBsiyAXK4sq6yhDe8RgT4LM=",
+			"path": "github.com/sirupsen/logrus",
+			"revision": "89742aefa4b206dcf400792f3bd35b542998eb3b",
+			"revisionTime": "2017-08-22T13:27:46Z"
 		},
 		{
 			"checksumSHA1": "K0crHygPTP42i1nLKWphSlvOQJw=",
