@@ -5,7 +5,7 @@ import (
 
 	"golang.org/x/crypto/ssh/terminal"
 
-	"github.com/Sirupsen/logrus"
+	"github.com/sirupsen/logrus"
 	cli "gopkg.in/urfave/cli.v1"
 )
 

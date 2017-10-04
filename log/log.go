@@ -3,7 +3,7 @@ package log
 import (
 	"io"
 
-	"github.com/Sirupsen/logrus"
+	"github.com/sirupsen/logrus"
 )
 
 // Basically doing what this suggests: http://stackoverflow.com/questions/30257622/golang-logrus-how-to-do-a-centralized-configuration
