@@ -13,6 +13,7 @@ package log
 
 import (
 	"os"
+	"time"
 
 	"golang.org/x/crypto/ssh/terminal"
 
@@ -28,7 +29,9 @@ func SetupLogging(c *cli.Context) error {
 	// Dynamically return false or true based on the logger output's
 	// file descriptor referring to a terminal or not.
 	if os.Getenv("TERM") == "dumb" || !isLogrusTerminal() {
-		SetFormatter(&logrus.JSONFormatter{})
+		SetFormatter(&logrus.JSONFormatter{
+			TimestampFormat: time.RFC3339Nano,
+		})
 	}
 	return nil
 }
