@@ -37,6 +37,14 @@
   name = "gopkg.in/urfave/cli.v1"
   version = "1.18.0"
 
+[[override]]
+    name = "github.com/apache/thrift"
+    revision = "e59b73d3c2bf1c328ccb78e683c0462fa1a473c7"
+
+[[override]]
+    name = "github.com/ugorji/go"
+    revision = "f3cacc17c85ecb7f1b6a9e373ee85d1480919868"
+
 [prune]
   go-tests = true
   unused-packages = true
