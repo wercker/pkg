@@ -26,10 +26,8 @@ import (
 
 func Test_ExposeInterceptor(t *testing.T) {
 	// Handler which will extract log Fields (from the context)
-	called := false
 	var actualFields log.Fields
 	th := func(ctx context.Context, req interface{}) (interface{}, error) {
-		called = true
 		actualFields, _ = log.FieldsFromContext(ctx)
 
 		return nil, nil
