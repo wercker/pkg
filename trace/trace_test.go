@@ -35,7 +35,7 @@ func Test_ExtractTraceID(t *testing.T) {
 		{"NoSpan", context.Background(), ""},
 		{"NoSpanContext", opentracing.ContextWithSpan(context.Background(), &fakeSpan{}), ""},
 		{"UnknownSpanContext", opentracing.ContextWithSpan(context.Background(), &fakeSpan{&fakeSpanContext{}}), ""},
-		{"ZipkinSpanContext", opentracing.ContextWithSpan(context.Background(), &fakeSpan{zipkinSpanContext}), "1e610000000000000d05"},
+		{"ZipkinSpanContext", opentracing.ContextWithSpan(context.Background(), &fakeSpan{zipkinSpanContext}), "0000000000001e610000000000000d05"},
 	}
 
 	for _, tt := range tests {
