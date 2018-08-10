@@ -17,8 +17,8 @@ import (
 	"golang.org/x/net/context"
 
 	opentracing "github.com/opentracing/opentracing-go"
-	zipkintracer "github.com/openzipkin/zipkin-go-opentracing"
-	"github.com/openzipkin/zipkin-go-opentracing/types"
+	zipkintracer "github.com/openzipkin-contrib/zipkin-go-opentracing"
+	"github.com/openzipkin-contrib/zipkin-go-opentracing/types"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 	"github.com/wercker/pkg/log"
@@ -36,7 +36,7 @@ func Test_ExposeInterceptor(t *testing.T) {
 	i := ExposeInterceptor()
 
 	// The context and the span context which used for the request
-	zipkinSpanContext := zipkintracer.SpanContext{TraceID: types.TraceID{7777, 3333}}
+	zipkinSpanContext := zipkintracer.SpanContext{TraceID: types.TraceID{High: 7777, Low: 3333}}
 	ctx := opentracing.ContextWithSpan(context.Background(), &fakeSpan{zipkinSpanContext})
 
 	_, err := i(ctx, nil, nil, th)

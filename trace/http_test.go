@@ -18,8 +18,8 @@ import (
 	"testing"
 
 	opentracing "github.com/opentracing/opentracing-go"
-	zipkintracer "github.com/openzipkin/zipkin-go-opentracing"
-	"github.com/openzipkin/zipkin-go-opentracing/types"
+	zipkintracer "github.com/openzipkin-contrib/zipkin-go-opentracing"
+	"github.com/openzipkin-contrib/zipkin-go-opentracing/types"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 	"github.com/wercker/pkg/log"
@@ -35,7 +35,7 @@ func Test_ExposeHandler(t *testing.T) {
 	})
 
 	// The context and the span context which used for the request
-	zipkinSpanContext := zipkintracer.SpanContext{TraceID: types.TraceID{7777, 3333}}
+	zipkinSpanContext := zipkintracer.SpanContext{TraceID: types.TraceID{High: 7777, Low: 3333}}
 	ctx := opentracing.ContextWithSpan(context.Background(), &fakeSpan{zipkinSpanContext})
 
 	recorder := httptest.NewRecorder()
