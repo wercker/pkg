@@ -15,7 +15,7 @@ import (
 	"context"
 
 	opentracing "github.com/opentracing/opentracing-go"
-	"github.com/openzipkin/zipkin-go-opentracing"
+	"github.com/openzipkin-contrib/zipkin-go-opentracing"
 )
 
 // ExtractTraceID extracts the TraceID from a opentracing enabled context.

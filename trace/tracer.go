@@ -17,7 +17,7 @@ import (
 	"strings"
 
 	opentracing "github.com/opentracing/opentracing-go"
-	"github.com/openzipkin/zipkin-go-opentracing"
+	"github.com/openzipkin-contrib/zipkin-go-opentracing"
 	"github.com/pkg/errors"
 )
 

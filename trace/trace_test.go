@@ -17,14 +17,14 @@ import (
 
 	opentracing "github.com/opentracing/opentracing-go"
 	"github.com/opentracing/opentracing-go/log"
-	zipkintracer "github.com/openzipkin/zipkin-go-opentracing"
-	"github.com/openzipkin/zipkin-go-opentracing/types"
+	zipkintracer "github.com/openzipkin-contrib/zipkin-go-opentracing"
+	"github.com/openzipkin-contrib/zipkin-go-opentracing/types"
 	"github.com/stretchr/testify/assert"
 )
 
 func Test_ExtractTraceID(t *testing.T) {
 	// Only set TraceID, as the rest is ignored
-	zipkinSpanContext := zipkintracer.SpanContext{TraceID: types.TraceID{7777, 3333}}
+	zipkinSpanContext := zipkintracer.SpanContext{TraceID: types.TraceID{High: 7777, Low: 3333}}
 
 	tests := []struct {
 		name     string
@@ -35,7 +35,7 @@ func Test_ExtractTraceID(t *testing.T) {
 		{"NoSpan", context.Background(), ""},
 		{"NoSpanContext", opentracing.ContextWithSpan(context.Background(), &fakeSpan{}), ""},
 		{"UnknownSpanContext", opentracing.ContextWithSpan(context.Background(), &fakeSpan{&fakeSpanContext{}}), ""},
-		{"ZipkinSpanContext", opentracing.ContextWithSpan(context.Background(), &fakeSpan{zipkinSpanContext}), "1e610000000000000d05"},
+		{"ZipkinSpanContext", opentracing.ContextWithSpan(context.Background(), &fakeSpan{zipkinSpanContext}), "0000000000001e610000000000000d05"},
 	}
 
 	for _, tt := range tests {

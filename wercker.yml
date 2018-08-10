@@ -1,4 +1,4 @@
-box: golang:1.8
+box: golang:1.10
 build:
   base-path: /go/src/github.com/wercker/pkg
   steps:
@@ -6,12 +6,8 @@ build:
         exclude: "^vendor"
 
     - script:
-        name: install govendor
-        code: go get -u github.com/kardianos/govendor
-
-    - script:
-        name: go vet
-        code: govendor vet +local
+        name: install dep
+        code: go get -u github.com/golang/dep/cmd/dep
 
     - script:
         name: force "go get" over ssh
@@ -22,15 +18,17 @@ build:
 
     - add-to-known_hosts:
         hostname: github.com
-        fingerprint: 16:27:ac:a5:76:28:2d:36:63:1b:56:4d:eb:df:a6:48
+        fingerprint: nThbg6kXUpJWGl7E1IGOCspRomTxdCARLviKw6E5SY8
         type: rsa
 
     - script:
         name: install dependencies
-        code: |
-          govendor sync
-          govendor list
+        code: dep ensure
+
+    - script:
+        name: go vet
+        code: go vet ./...
 
     - script:
         name: go test
-        code: CGO_ENABLED=0 govendor test +local
+        code: CGO_ENABLED=0 go test -v ./...
