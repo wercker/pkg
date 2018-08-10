@@ -46,7 +46,7 @@ func Test_ExposeInterceptor(t *testing.T) {
 	if assert.NotNil(t, actualFields) {
 		f, ok := actualFields[TraceFieldKey]
 		if assert.True(t, ok, "Fields does not contain expected field with key: %s", TraceFieldKey) {
-			assert.Equal(t, "1e610000000000000d05", f)
+			assert.Equal(t, "0000000000001e610000000000000d05", f)
 		}
 	}
 }
