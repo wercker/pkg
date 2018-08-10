@@ -26,20 +26,60 @@
 
 
 [[constraint]]
+  name = "github.com/aws/aws-sdk-go"
+  version = "1.15.9"
+
+[[constraint]]
+  branch = "master"
+  name = "github.com/grpc-ecosystem/grpc-opentracing"
+
+[[constraint]]
+  name = "github.com/mwitkow/go-grpc-middleware"
+  version = "1.0.0"
+
+[[constraint]]
+  branch = "master"
+  name = "github.com/opentracing-contrib/go-stdlib"
+
+[[constraint]]
   name = "github.com/opentracing/opentracing-go"
-  version = "1.0.1"
+  version = "1.0.2"
 
 [[constraint]]
   name = "github.com/openzipkin/zipkin-go-opentracing"
-  version = "0.2.3"
+  version = "0.3.4"
+
+[[constraint]]
+  name = "github.com/pkg/errors"
+  version = "0.8.0"
+
+[[constraint]]
+  name = "github.com/prometheus/client_golang"
+  version = "0.8.0"
+
+[[constraint]]
+  name = "github.com/sirupsen/logrus"
+  version = "1.0.6"
+
+[[constraint]]
+  name = "github.com/stretchr/testify"
+  version = "1.2.2"
+
+[[constraint]]
+  branch = "master"
+  name = "golang.org/x/crypto"
+
+[[constraint]]
+  branch = "master"
+  name = "golang.org/x/net"
+
+[[constraint]]
+  name = "google.golang.org/grpc"
+  version = "1.14.0"
 
 [[constraint]]
   name = "gopkg.in/urfave/cli.v1"
-  version = "1.18.0"
-
-[[override]]
-  name = "github.com/apache/thrift"
-  branch = "master"
+  version = "1.20.0"
 
 [prune]
   go-tests = true

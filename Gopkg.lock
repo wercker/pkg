@@ -10,12 +10,12 @@
   version = "v1.17.0"
 
 [[projects]]
-  branch = "master"
-  digest = "1:eee9386329f4fcdf8d6c0def0c9771b634bdd5ba460d888aa98c17d59b37a76c"
+  digest = "1:e64acfe8cda1955db545ede8e863c54d69f1ac6cd058df4349be4040320840fd"
   name = "github.com/apache/thrift"
   packages = ["lib/go/thrift"]
   pruneopts = "UT"
-  revision = "6e67faa92827ece022380b211c2caaadd6145bf5"
+  revision = "327ebb6c2b6df8bf075da02ef45a2a034e9b79ba"
+  version = "0.11.0"
 
 [[projects]]
   digest = "1:497477c8a18202b0fb2d189ec4c1c28a927bc7b689b19465c44ed32bb9b55c28"
@@ -171,6 +171,14 @@
 
 [[projects]]
   branch = "master"
+  digest = "1:2da0e5077ed40453dc281b9a2428d84cf6ad14063aed189f6296ca5dd25cf13d"
+  name = "github.com/opentracing-contrib/go-observer"
+  packages = ["."]
+  pruneopts = "UT"
+  revision = "a52f2342449246d5bcc273e65cbdcfa5f7d6c63c"
+
+[[projects]]
+  branch = "master"
   digest = "1:264f2848854a41b03a6525ea6c1e858762caa34964a63dde898dc4bba339e50f"
   name = "github.com/opentracing-contrib/go-stdlib"
   packages = ["nethttp"]
@@ -190,19 +198,19 @@
   version = "v1.0.2"
 
 [[projects]]
-  digest = "1:d268bb215ce12c5426fe4c16a2682274b1bbdabf6f6bf5f59ce72033ee3bb891"
+  digest = "1:a427dd5035907bf7ad9a1fa269805f3a9ead9cfab056b32e2d86c230e28e31c0"
   name = "github.com/openzipkin/zipkin-go-opentracing"
   packages = [
     ".",
-    "_thrift/gen-go/scribe",
-    "_thrift/gen-go/zipkincore",
     "flag",
+    "thrift/gen-go/scribe",
+    "thrift/gen-go/zipkincore",
     "types",
     "wire",
   ]
   pruneopts = "UT"
-  revision = "d88c90182f3fb514be54a1c7adc11a04d41c7da9"
-  version = "v0.2.4"
+  revision = "26cf9707480e6b90e5eff22cf0bbf05319154232"
+  version = "v0.3.4"
 
 [[projects]]
   digest = "1:29803f52611cbcc1dfe55b456e9fdac362af7248b3d29d7ea1bec0a12e71dff4"

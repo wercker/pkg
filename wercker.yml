@@ -27,7 +27,7 @@ build:
 
     - script:
         name: go vet
-        code: go vet ./...
+        code: go list ./... | grep -v vendor | xargs go vet -v
 
     - script:
         name: go test
