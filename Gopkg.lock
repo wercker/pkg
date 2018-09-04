@@ -132,6 +132,14 @@
 
 [[projects]]
   branch = "master"
+  digest = "1:b0e4fd3029cb69e3741c50252c007861645b0ddaba6b468e28d2b5a6eac8b5a7"
+  name = "github.com/grpc-ecosystem/go-grpc-middleware"
+  packages = ["."]
+  pruneopts = "UT"
+  revision = "498ae206fc3cfe81cd82e48c1d4354026fa5f9ec"
+
+[[projects]]
+  branch = "master"
   digest = "1:1a1206efd03a54d336dce7bb8719e74f2f8932f661cb9f57d5813a1d99c083d8"
   name = "github.com/grpc-ecosystem/grpc-opentracing"
   packages = ["go/otgrpc"]
@@ -160,14 +168,6 @@
   pruneopts = "UT"
   revision = "c12348ce28de40eed0136aa2b644d0ee0650e56c"
   version = "v1.0.1"
-
-[[projects]]
-  digest = "1:1168584a5881d371e96cb0e66ef6db71d7cef0856cc7f311490bc856627f8328"
-  name = "github.com/mwitkow/go-grpc-middleware"
-  packages = ["."]
-  pruneopts = "UT"
-  revision = "c250d6563d4d4c20252cd865923440e829844f4e"
-  version = "v1.0.0"
 
 [[projects]]
   branch = "master"
@@ -431,8 +431,8 @@
   input-imports = [
     "github.com/aws/aws-sdk-go/aws",
     "github.com/aws/aws-sdk-go/service/ses",
+    "github.com/grpc-ecosystem/go-grpc-middleware",
     "github.com/grpc-ecosystem/grpc-opentracing/go/otgrpc",
-    "github.com/mwitkow/go-grpc-middleware",
     "github.com/opentracing-contrib/go-stdlib/nethttp",
     "github.com/opentracing/opentracing-go",
     "github.com/opentracing/opentracing-go/log",

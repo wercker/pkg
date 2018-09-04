@@ -12,8 +12,8 @@
 package trace
 
 import (
+	grpcmw "github.com/grpc-ecosystem/go-grpc-middleware"
 	"github.com/grpc-ecosystem/grpc-opentracing/go/otgrpc"
-	grpcmw "github.com/mwitkow/go-grpc-middleware"
 	opentracing "github.com/opentracing/opentracing-go"
 	"github.com/wercker/pkg/log"
 	"golang.org/x/net/context"
