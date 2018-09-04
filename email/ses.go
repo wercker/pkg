@@ -101,16 +101,24 @@ func convertToSendEmailInput(m *Message) *ses.SendEmailInput {
 			if m.HTMLBody != "" || m.TextBody != "" {
 				result.Message.Body = &ses.Body{}
 				if m.HTMLBody != "" {
+					hbody, err := m.HTML()
+					if err != nil {
+						return result
+					}
 					result.Message.Body.Html = &ses.Content{
 						Charset: aws.String("UTF-8"),
-						Data:    aws.String(m.HTMLBody),
+						Data:    aws.String(hbody),
 					}
 				}
 
 				if m.TextBody != "" {
+					tbody, err := m.Text()
+					if err != nil {
+						return result
+					}
 					result.Message.Body.Text = &ses.Content{
 						Charset: aws.String("UTF-8"),
-						Data:    aws.String(m.TextBody),
+						Data:    aws.String(tbody),
 					}
 				}
 			}
