@@ -198,20 +198,11 @@
   version = "v1.0.2"
 
 [[projects]]
-  digest = "1:bb0965bbaa1e183fe1ccf7e6980b33c0037a0150d802d920093465e9852aa09a"
+  branch = "master"
+  digest = "1:b25610bba38d84c023ce1c1b485f5e58d20da429b99680edd00d278a31ae712e"
   name = "github.com/openzipkin-contrib/zipkin-go-opentracing"
   packages = [
     ".",
-    "types",
-  ]
-  pruneopts = "UT"
-  revision = "26cf9707480e6b90e5eff22cf0bbf05319154232"
-  version = "v0.3.4"
-
-[[projects]]
-  digest = "1:3db45f50ff55946196977f31540493e3d232e09cec2f84d3787dec1ec5fabbb4"
-  name = "github.com/openzipkin/zipkin-go-opentracing"
-  packages = [
     "flag",
     "thrift/gen-go/scribe",
     "thrift/gen-go/zipkincore",
@@ -219,9 +210,7 @@
     "wire",
   ]
   pruneopts = "UT"
-  revision = "26cf9707480e6b90e5eff22cf0bbf05319154232"
-  source = "github.com/openzipkin-contrib/zipkin-go-opentracing"
-  version = "v0.3.4"
+  revision = "b85dc675b16b116a00c351d2c41305bf9ae71293"
 
 [[projects]]
   digest = "1:29803f52611cbcc1dfe55b456e9fdac362af7248b3d29d7ea1bec0a12e71dff4"

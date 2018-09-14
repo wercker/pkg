@@ -88,3 +88,7 @@
 [[override]]
   name = "github.com/openzipkin/zipkin-go-opentracing"
   source = "github.com/openzipkin-contrib/zipkin-go-opentracing"
+
+[[constraint]]
+  name = "github.com/openzipkin-contrib/zipkin-go-opentracing"
+  branch = "master"
