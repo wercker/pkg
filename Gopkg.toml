@@ -84,3 +84,7 @@
 [prune]
   go-tests = true
   unused-packages = true
+
+[[override]]
+  name = "github.com/openzipkin/zipkin-go-opentracing"
+  source = "github.com/openzipkin-contrib/zipkin-go-opentracing"

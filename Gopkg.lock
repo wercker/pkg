@@ -220,6 +220,7 @@
   ]
   pruneopts = "UT"
   revision = "26cf9707480e6b90e5eff22cf0bbf05319154232"
+  source = "github.com/openzipkin-contrib/zipkin-go-opentracing"
   version = "v0.3.4"
 
 [[projects]]
