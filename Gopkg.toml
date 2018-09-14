@@ -77,10 +77,6 @@
   name = "gopkg.in/urfave/cli.v1"
   version = "1.20.0"
 
-[[constraint]]
-  name = "github.com/openzipkin-contrib/zipkin-go-opentracing"
-  branch = "master"
-
 [[override]]
   name = "github.com/apache/thrift"
   branch = "master"
@@ -88,3 +84,11 @@
 [prune]
   go-tests = true
   unused-packages = true
+
+[[override]]
+  name = "github.com/openzipkin/zipkin-go-opentracing"
+  source = "github.com/openzipkin-contrib/zipkin-go-opentracing"
+
+[[constraint]]
+  name = "github.com/openzipkin-contrib/zipkin-go-opentracing"
+  branch = "master"
