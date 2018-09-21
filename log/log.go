@@ -12,7 +12,10 @@
 package log
 
 import (
+	"fmt"
 	"io"
+	"runtime"
+	"strings"
 
 	"github.com/sirupsen/logrus"
 )
@@ -129,120 +132,134 @@ func WithFields(fields Fields) *Entry {
 
 // Debug logs a message at level Debug on the standard entry.
 func Debug(args ...interface{}) {
-	entry.Debug(args...)
+	entry.sourced().Debug(args...)
 }
 
 // Print logs a message at level Info on the standard entry.
 func Print(args ...interface{}) {
-	entry.Print(args...)
+	entry.sourced().Print(args...)
 }
 
 // Info logs a message at level Info on the standard entry.
 func Info(args ...interface{}) {
-	entry.Info(args...)
+	entry.sourced().Info(args...)
 }
 
 // Warn logs a message at level Warn on the standard entry.
 func Warn(args ...interface{}) {
-	entry.Warn(args...)
+	entry.sourced().Warn(args...)
 }
 
 // Warning logs a message at level Warn on the standard entry.
 func Warning(args ...interface{}) {
-	entry.Warning(args...)
+	entry.sourced().Warning(args...)
 }
 
 // Error logs a message at level Error on the standard entry.
 func Error(args ...interface{}) {
-	entry.Error(args...)
+	entry.sourced().Error(args...)
 }
 
 // Panic logs a message at level Panic on the standard entry.
 func Panic(args ...interface{}) {
-	entry.Panic(args...)
+	entry.sourced().Panic(args...)
 }
 
 // Fatal logs a message at level Fatal on the standard entry.
 func Fatal(args ...interface{}) {
-	entry.Fatal(args...)
+	entry.sourced().Fatal(args...)
 }
 
 // Debugf logs a message at level Debug on the standard entry.
 func Debugf(format string, args ...interface{}) {
-	entry.Debugf(format, args...)
+	entry.sourced().Debugf(format, args...)
 }
 
 // Printf logs a message at level Info on the standard entry.
 func Printf(format string, args ...interface{}) {
-	entry.Printf(format, args...)
+	entry.sourced().Printf(format, args...)
 }
 
 // Infof logs a message at level Info on the standard entry.
 func Infof(format string, args ...interface{}) {
-	entry.Infof(format, args...)
+	entry.sourced().Infof(format, args...)
 }
 
 // Warnf logs a message at level Warn on the standard entry.
 func Warnf(format string, args ...interface{}) {
-	entry.Warnf(format, args...)
+	entry.sourced().Warnf(format, args...)
 }
 
 // Warningf logs a message at level Warn on the standard entry.
 func Warningf(format string, args ...interface{}) {
-	entry.Warningf(format, args...)
+	entry.sourced().Warningf(format, args...)
 }
 
 // Errorf logs a message at level Error on the standard entry.
 func Errorf(format string, args ...interface{}) {
-	entry.Errorf(format, args...)
+	entry.sourced().Errorf(format, args...)
 }
 
 // Panicf logs a message at level Panic on the standard entry.
 func Panicf(format string, args ...interface{}) {
-	entry.Panicf(format, args...)
+	entry.sourced().Panicf(format, args...)
 }
 
 // Fatalf logs a message at level Fatal on the standard entry.
 func Fatalf(format string, args ...interface{}) {
-	entry.Fatalf(format, args...)
+	entry.sourced().Fatalf(format, args...)
 }
 
 // Debugln logs a message at level Debug on the standard entry.
 func Debugln(args ...interface{}) {
-	entry.Debugln(args...)
+	entry.sourced().Debugln(args...)
 }
 
 // Println logs a message at level Info on the standard entry.
 func Println(args ...interface{}) {
-	entry.Println(args...)
+	entry.sourced().Println(args...)
 }
 
 // Infoln logs a message at level Info on the standard entry.
 func Infoln(args ...interface{}) {
-	entry.Infoln(args...)
+	entry.sourced().Infoln(args...)
 }
 
 // Warnln logs a message at level Warn on the standard entry.
 func Warnln(args ...interface{}) {
-	entry.Warnln(args...)
+	entry.sourced().Warnln(args...)
 }
 
 // Warningln logs a message at level Warn on the standard entry.
 func Warningln(args ...interface{}) {
-	entry.Warningln(args...)
+	entry.sourced().Warningln(args...)
 }
 
 // Errorln logs a message at level Error on the standard entry.
 func Errorln(args ...interface{}) {
-	entry.Errorln(args...)
+	entry.sourced().Errorln(args...)
 }
 
 // Panicln logs a message at level Panic on the standard entry.
 func Panicln(args ...interface{}) {
-	entry.Panicln(args...)
+	entry.sourced().Panicln(args...)
 }
 
 // Fatalln logs a message at level Fatal on the standard entry.
 func Fatalln(args ...interface{}) {
-	entry.Fatalln(args...)
+	entry.sourced().Fatalln(args...)
+}
+
+// sourced adds a source field to the logger that contains
+// the file name and line where the logging happened.
+func (e *Entry) sourced() *Entry {
+	_, file, line, ok := runtime.Caller(2)
+	if !ok {
+		file = "<???>"
+		line = 1
+	} else {
+		slash := strings.LastIndex(file, "/")
+		file = file[slash+1:]
+	}
+	return e.WithField("source", fmt.Sprintf("%s:%d", file, line))
 }
